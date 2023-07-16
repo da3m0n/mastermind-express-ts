@@ -1,0 +1,130 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  /*min-width: 320px;*/
+  /*min-height: 100vh;*/
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+#app {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+#board-wrapper {
+  /*width: min(100vw, 40vh, 450px);*/
+  /*max-width: var(--width); */
+  /*width: 575px;*/
+  align-self: center;
+  justify-self: center;
+  /*        width: 100%;
+                  height: 100%;*/
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border: 1px solid gray;
+  background: #dcdcdc;
+  /*margin-bottom: 20px;*/
+  padding: 20px 20px 0 20px;
+  margin: auto auto;
+}
+
+.board {
+  display: flex;
+  inset: 20px;
+  height: 500px;
+}
+
+.grid {
+  display: flex;
+  flex-direction: column;
+}
+
+.row-div {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  align-items: center;
+}
+
+.code-pegs {
+  display: flex;
+  flex-direction: column;
+}
+
+.code-peg {
+  display: flex;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid rgb(107, 106, 106);
+  margin: 10px 0 10px 10px;
+  filter: drop-shadow(2px 2px 4px #000000);
+  font-size: 35px;
+  width: 50px;
+  height: 50px;
+  background-color: #ffffff;
+}
+
+.code-peg-div {
+  display: flex;
+  flex-direction: row;
+}
+
+.hints {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-column-gap: 5px;
+  grid-row-gap: 5px;
+  padding: 8px 4px;
+  margin: 0 15px 0 15px;
+}
+
+.hint-peg {
+  /*width: 10px;*/
+  /*height: 10px;*/
+  border: 1px solid gray;
+  border-radius: 50%;
+
+}
+.solution {
+  width: 100%;
+  background-color: lightseagreen;
+  border: 1px solid red;
+}
+
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
