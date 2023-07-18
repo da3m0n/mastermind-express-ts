@@ -1,10 +1,12 @@
 import "../css/style.css";
 import Board from "./Board";
+import Board2 from "./Board2";
 
 const initApp = (): void => {
   console.log("load page");
   // const board: Board = new Board();
-  new Board(6, 4);
+  const board = new Board2(6, 4);
+  board.createBoard("board-wrapper");
 };
 
 document.addEventListener("DOMContentLoaded", initApp);

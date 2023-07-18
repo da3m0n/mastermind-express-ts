@@ -6,12 +6,12 @@ interface IPeg {
   pegTextColor: string;
 }
 
-export default class Board {
+export default class Board2 {
   // private gamePlayPegs_: string | undefined;
   private readonly rows_: number;
   private readonly cols_: number;
   // private pegColors_: { pegColor: string; pegTextColor: string }[];
-  private pegColors_: IPeg[];
+  private readonly pegColors_: IPeg[];
 
   constructor(rows: number, cols: number) {
     this.rows_ = rows;
@@ -29,56 +29,59 @@ export default class Board {
   }
 
   createBoard(root: string) {
+    const rootDiv = document.getElementById(root) as HTMLDivElement;
+
+    const boardDiv = Utils.createDom("div", {
+      class: "board",
+    }) as HTMLDivElement;
+
+    const playGrid = Utils.createDom("div", {
+      class: "play-grid",
+    }) as HTMLDivElement;
+
+    const codePegsDiv = Utils.createDom("div", {
+      class: "code-pegs",
+    }) as HTMLDivElement;
+
+    const solutionDiv = Utils.createDom("div", {
+      class: "solutionDiv",
+    }) as HTMLDivElement;
+
+    const footerDiv = Utils.createDom("div", {
+      class: "footerDiv",
+    }) as HTMLDivElement;
+
+    const peg: Peg = new Peg(50, "ffffff", "code-peg");
+
     const rootEl = document.getElementById(root) as HTMLDivElement;
-    const grid = document.getElementById("grid") as HTMLDivElement;
+    rootEl.appendChild(boardDiv);
 
     for (let i = 0; i < this.rows_; i++) {
       const rowDiv = Utils.createDom("div", {
         class: "row-div",
       }) as HTMLDivElement;
-      let pegDiv = Utils.createDom("div", {
-        class: "code-peg-div",
+      let guessPegsDiv = Utils.createDom("div", {
+        class: "guess-pegs-div",
       }) as HTMLDivElement;
       let hintsDiv = Utils.createDom("div", {
         class: "hints",
       }) as HTMLDivElement;
 
       for (let j = 0; j < this.cols_; j++) {
-        const peg: Peg = new Peg(50, "ffffff", "code-peg");
-        // pegDiv.appendChild(
-        //   peg.createElement2({
-        //     class: "code-peg",
-        //   })
-        // );
-        pegDiv.appendChild(peg.createElement());
-      }
-
-      for (let j = 0; j < this.cols_; j++) {
         let name = "hint" + (j + 1);
-        let hintPeg2 = Utils.createDom("div", {
+        let hintPeg = Utils.createDom("div", {
           id: "hint-peg-" + (j + 1),
           class: "hint-peg " + name,
         }) as HTMLDivElement;
 
-        // const hintPeg: Peg = new Peg(10, "#ffffff", "hint-peg");
-        // hintsDiv.appendChild(
-        //   hintPeg.createElement2({
-        //     id: "hint-peg-" + (j + 1),
-        //     class: "hint-peg",
-        //     style: "width: 10px; height: 10px",
-        //   })
-        // );
-        hintsDiv.appendChild(hintPeg2);
+        hintsDiv.appendChild(hintPeg);
+        guessPegsDiv.appendChild(peg.createElement());
+        rowDiv.appendChild(guessPegsDiv);
+        rowDiv.append(hintsDiv);
+        // rowDiv.appendChild(hintPeg2);
       }
-      rowDiv.appendChild(pegDiv);
-      rowDiv.appendChild(hintsDiv);
-      grid.appendChild(rowDiv);
+      playGrid.appendChild(rowDiv);
     }
-
-    const codePegsDiv = document.getElementById("code-pegs") as HTMLDivElement;
-    let codePegs = Utils.createDom("div", {
-      class: "code-pegs",
-    }) as HTMLDivElement;
 
     for (let i = 0; i < this.pegColors_.length; i++) {
       const num = i + 1;
@@ -96,27 +99,36 @@ export default class Board {
 
       this.decorateCodePeg(pegBtn, num, attributes);
 
-      codePegs.appendChild(pegBtn);
+      codePegsDiv.appendChild(pegBtn);
     }
-    codePegsDiv.appendChild(codePegs);
 
-    const appWrapper = document.getElementById("app") as HTMLDivElement;
-    const footer = document.getElementsByTagName("footer")[0] as HTMLElement;
     const newGameBtn = Utils.createDom(
       "button",
       { id: "newGameBtn" },
       "new Game"
     ) as HTMLButtonElement;
-    const bWrapper = document.getElementById("board-wrapper") as HTMLDivElement;
+
+    const tempText = Utils.createDom("p", {}) as HTMLLabelElement;
+
+    for (let i = 0; i < this.cols_; i++) {
+      solutionDiv.append(peg.createElement());
+    }
+    solutionDiv.appendChild(tempText);
+
+    footerDiv.appendChild(solutionDiv);
+    footerDiv.appendChild(newGameBtn);
+    boardDiv.appendChild(playGrid);
+    boardDiv.appendChild(codePegsDiv);
+    rootDiv.appendChild(footerDiv);
+
     newGameBtn.addEventListener("click", (e) => {
       console.log("clickity click");
-      bWrapper.innerHTML = "";
-      this.createBoard("grid");
+      rootDiv.innerHTML = "";
+      this.createBoard("board-wrapper");
     });
-
-    footer.appendChild(newGameBtn);
   }
 
+  makeFooter() {}
   decorateCodePeg(el: HTMLDivElement, num: number, attributes: {}) {
     return Object.keys(attributes).forEach((attr) => {
       el.setAttribute(attr, attributes[attr]);

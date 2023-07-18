@@ -58,7 +58,7 @@ h1 {
   height: 500px;
 }
 
-.grid {
+.play-grid {
   display: flex;
   flex-direction: column;
 }
@@ -70,6 +70,10 @@ h1 {
   align-items: center;
 }
 
+.guess-pegs-div {
+  display: flex;
+  flex-direction: row;
+}
 .code-pegs {
   display: flex;
   flex-direction: column;
@@ -103,13 +107,15 @@ h1 {
 }
 
 .hint-peg {
-  /*width: 10px;*/
-  /*height: 10px;*/
+  width: 10px;
+  height: 10px;
   border: 1px solid gray;
   border-radius: 50%;
 
 }
-.solution {
+.solutionDiv {
+  display: flex;
+  flex-direction: row;
   width: 100%;
   background-color: lightseagreen;
   border: 1px solid red;
