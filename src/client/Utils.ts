@@ -1,8 +1,18 @@
 export default class Utils {
+  static removeChildren(el : HTMLElement | null) {
+    if (el) {
+      while (el.children.length > 0) {
+        el.removeChild(el.firstChild as HTMLElement);
+      }
+    }
+  }
   static createDom(type: string, props: any, ...cells: any[]): HTMLElement {
     let row = document.createElement(type) as HTMLElement;
 
-    if (props) {
+    if (typeof props == 'string') {
+      row.setAttribute('class', props);
+    }
+    else if (props) {
       for (let p in props) {
         row.setAttribute(p, props[p]);
       }

@@ -6,7 +6,7 @@ const initApp = (): void => {
   console.log("load page");
   // const board: Board = new Board();
   const board = new Board2(6, 4);
-  board.createBoard("board-wrapper");
+  board.createBoard(document.getElementById("board-wrapper") as HTMLElement);
 };
 
 document.addEventListener("DOMContentLoaded", initApp);
