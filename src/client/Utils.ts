@@ -1,5 +1,5 @@
 export default class Utils {
-  static removeChildren(el : HTMLElement | null) {
+  static removeChildren(el: HTMLElement | null) {
     if (el) {
       while (el.children.length > 0) {
         el.removeChild(el.firstChild as HTMLElement);
@@ -9,10 +9,9 @@ export default class Utils {
   static createDom(type: string, props: any, ...cells: any[]): HTMLElement {
     let row = document.createElement(type) as HTMLElement;
 
-    if (typeof props == 'string') {
-      row.setAttribute('class', props);
-    }
-    else if (props) {
+    if (typeof props == "string") {
+      row.setAttribute("class", props);
+    } else if (props) {
       for (let p in props) {
         row.setAttribute(p, props[p]);
       }
@@ -28,5 +27,10 @@ export default class Utils {
       row.appendChild(cell);
     }
     return row;
+  }
+
+  static makeUrl(name: string): string {
+    let url = window.location.protocol === "http:" ? "ws://" : "wss://";
+    return url + window.location.host + "/" + name;
   }
 }
