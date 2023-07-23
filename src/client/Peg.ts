@@ -1,20 +1,20 @@
 import Utils from "./Utils";
 
 export default class Peg {
-  private _size: number;
-  private _color: string;
-  private _className: string;
+  private size_: number;
+  private color_: string;
+  private className_: string;
 
   constructor(size: number, color: string = "#ffffff", className: string) {
-    this._className = className;
-    this._size = size;
-    this._color = color;
+    this.className_ = className;
+    this.size_ = size;
+    this.color_ = color;
   }
 
   createElement(): HTMLElement {
-    const peg = Utils.createDom("div", { class: this._className });
-    peg.style.width = this._size.toString() + "px";
-    peg.style.height = this._size.toString() + "px";
+    const peg = Utils.createDom("div", { class: this.className_ });
+    peg.style.width = this.size_.toString() + "px";
+    peg.style.height = this.size_.toString() + "px";
 
     peg.style.backgroundColor = "#ffffff";
 
@@ -23,7 +23,7 @@ export default class Peg {
 
   createElement2(attrs: { [key: string]: string }): HTMLDivElement {
     const peg = Utils.createDom("div", {
-      class: this._className,
+      class: this.className_,
     }) as HTMLDivElement;
 
     for (const key in attrs) {

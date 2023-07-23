@@ -75,7 +75,12 @@ export default class Board {
 
           this.updateHints(res.res, rowDiv);
 
-          console.log("res", res);
+          if (res.state === 1) {
+            this.showBanner("Weener weener shhekun dinner: ", res);
+          } else if (res.state === 2) {
+            this.showBanner("Too bad, you lost :( ", res);
+          }
+
           this.curRow_++;
           this.guesses_.clear();
         }
@@ -89,6 +94,7 @@ export default class Board {
     this.rootDiv_ = rootDiv;
     this.recreateBoard();
   }
+
   recreateBoard() {
     const cd = Utils.createDom;
     const rootDiv = this.rootDiv_ as HTMLElement;
@@ -98,8 +104,16 @@ export default class Board {
     const boardDiv = cd("div", { class: "board" }) as HTMLDivElement;
     const playGrid = cd("div", { class: "play-grid" }) as HTMLDivElement;
     const codePegsDiv = cd("div", { class: "code-pegs" }) as HTMLDivElement;
-    const solutionDiv = cd("div", { class: "solutionDiv" });
-    const footerDiv = cd("div", { class: "footerDiv" }) as HTMLDivElement;
+    const solutionDiv = cd("div", { class: "solutionDiv", id: "solutionDiv" });
+    // solutionDiv.hidden = true;
+
+    const solutionPegsDiv = cd("div", {
+      class: "solutionPegsDiv",
+    }) as HTMLElement;
+    const footerDiv = cd("div", {
+      class: "footerDiv",
+      id: "boardFooter",
+    }) as HTMLDivElement;
     const rootEl = rootDiv as HTMLDivElement;
 
     const peg: Peg = new Peg(50, "ffffff", "code-peg");
@@ -157,15 +171,17 @@ export default class Board {
       "New Game"
     ) as HTMLButtonElement;
 
-    newGameBtn.addEventListener("click", async (e) => {
+    newGameBtn.addEventListener("click", async () => {
       this.recreateBoard();
     });
 
     for (let i = 0; i < this.cols_; i++) {
-      solutionDiv.append(peg.createElement());
+      solutionPegsDiv.append(peg.createElement());
     }
 
-    footerDiv.appendChild(solutionDiv);
+    solutionDiv.appendChild(solutionPegsDiv);
+    // solutionDiv.hidden = true;
+    // footerDiv.appendChild(solutionDiv);
     footerDiv.appendChild(newGameBtn);
     boardDiv.appendChild(playGrid);
     boardDiv.appendChild(codePegsDiv);
@@ -192,5 +208,52 @@ export default class Board {
         r.classList.add("close");
       }
     });
+  }
+
+  private showBanner(msg: string, res?: any) {
+    const cd = Utils.createDom;
+    const banner = cd("div", { class: "tedt" });
+    // const solutionDiv = document.getElementById(
+    //   "solutionDiv"
+    // ) as HTMLDivElement;
+    const solutionDiv = cd("div", { class: "solutionDiv" });
+    const footer = document.getElementById("boardFooter") as HTMLDivElement;
+
+    const text = Utils.createDom(
+      "div",
+      { class: "banner-text" },
+      msg
+    ) as HTMLDivElement;
+
+    if (res.state === 1) {
+      console.log("game won");
+      banner.appendChild(text);
+      solutionDiv.appendChild(text);
+      solutionDiv.style.display = "flex";
+      footer.appendChild(solutionDiv);
+    } else if (res.state === 2) {
+      const peg: Peg = new Peg(50, "#ffffff", "code-peg");
+      const solution = res.solution;
+      const solutionPegsDiv = cd("div", { class: "solutionPegsDiv" });
+
+      for (let i = 0; i < solution.length; i++) {
+        const num = solution[i];
+        const attributes = {
+          style:
+            "background: " +
+            this.pegColors_[num - 1].pegColor +
+            "; color: " +
+            this.pegColors_[num - 1].pegTextColor,
+        };
+        const pegEl = peg.createElement() as HTMLDivElement;
+        this.decorateCodePeg(pegEl, num, attributes);
+        solutionPegsDiv.appendChild(pegEl);
+      }
+      banner.appendChild(text);
+      solutionDiv.appendChild(text);
+      solutionDiv.appendChild(solutionPegsDiv);
+      solutionDiv.style.display = "flex";
+      footer.appendChild(solutionDiv);
+    }
   }
 }

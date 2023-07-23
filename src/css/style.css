@@ -45,10 +45,11 @@ h1 {
   flex-direction: column;
   justify-content: center;
   border: 1px solid gray;
+  border-radius: 5px;
   background: #dcdcdc;
   /*margin-bottom: 20px;*/
-  padding: 20px 20px 0 20px;
-  margin: auto auto;
+  padding: 20px 20px 10px 20px;
+  margin: 0 auto 10px auto;
 }
 
 .board {
@@ -121,12 +122,34 @@ h1 {
   background: #000000;
 }
 
+.footerDiv {
+  display: flex;
+  flex-direction: column-reverse;
+}
 .solutionDiv {
+  display: none;
+  flex-direction: column;
+  width: 100%;
+  background-color: #c9c7c7;
+  margin: 5px 0 10px 0;
+  border: 1px solid gray;
+  border-radius: 5px;
+
+  & .banner-text {
+    display: flex;
+    justify-content: center;
+  font-size: 25px;
+  font-style: italic;
+  color: #ffffff;
+    }
+}
+
+.solutionMsg {
+
+}
+.solutionPegsDiv {
   display: flex;
   flex-direction: row;
-  width: 100%;
-  background-color: lightseagreen;
-  border: 1px solid red;
 }
 
 

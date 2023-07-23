@@ -50,13 +50,13 @@ export default class ServerGame {
       };
     }
 
-    if (this.previousGuesses_.length === 6) {
+    if (this.previousGuesses_.length === 2) {
       const obj = {
         res,
         state: this.STATE.lost,
         solution: this.solution_,
       };
-      console.log("solution", obj);
+      console.log("You lost!", obj);
       return obj;
     }
     return { res, state: this.STATE.playing };
