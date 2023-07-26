@@ -11,7 +11,7 @@ export default class ServerGame {
   constructor() {
     this.previousGuesses_ = [];
     this.solution_ = this.generateRandomNumbers();
-    console.log("new ServerGame()");
+    console.log("new ServerGame()", this.solution_);
   }
 
   check(playerGuess: number[]): {
@@ -68,7 +68,8 @@ export default class ServerGame {
 
   newGame(): { state: number } {
     console.log("new Game in game.ts");
-    new ServerGame();
+    this.previousGuesses_ = [];
+    this.solution_ = this.generateRandomNumbers();
     return {
       state: this.STATE.new,
     };
