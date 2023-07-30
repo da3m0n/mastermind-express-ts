@@ -7,4 +7,4 @@ const initApp = (): void => {
 };
 
 document.addEventListener("DOMContentLoaded", initApp);
-console.log(import.meta.env.VITE_PORT);
+// console.log(import.meta.env.VITE_PORT);

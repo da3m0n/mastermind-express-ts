@@ -152,6 +152,56 @@ h1 {
   flex-direction: row;
 }
 
+/*Login and Registration */
+.login-registration {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  margin: 50px auto 0 auto;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 15px;
+  width: 340px;
+  background: #c9c7c7;
+
+& .form-row {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 10px;
+  }
+& input {
+    width: calc(100% - 57px);
+    height: 36px;
+    margin: 13px 0 0 -5px;
+    padding-left: 10px;
+    border-radius: 0 5px 5px 0;
+    border: solid 1px #cbc9c9;
+    box-shadow: 1px 2px 5px rgba(0,0,0,.09);
+    background: #fff;
+  }
+  & h1 {
+      padding: 10px 0;
+      font-size: 38px;
+      font-weight: 300;
+      text-align: center;
+  color: black;
+    }
+
+  & hr {
+  color:#a9a9a9;
+  opacity: 0.3;
+    }
+
+    & .icon {
+        display: inline-block;
+        padding: 9.3px 15px;
+        box-shadow: 1px 2px 5px rgba(0,0,0,.09);
+        background: #1c87c9;
+        color: #fff;
+        text-align: center;
+      }
+}
+/**/
 
 @media (prefers-color-scheme: light) {
   :root {

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="src/css/style.css" />
+    <title>Title</title>
+  </head>
+  <body>
+    <div class="login-registration">
+      <h1>Login</h1>
+      <form id="register" action="/login" method="get">
+        <div>
+          <label for="uname">Username</label>
+          <input type="text" id="uname" name="uname" required />
+        </div>
+        <div>
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required />
+        </div>
+        <div>
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required />
+        </div>
+        <button type="submit" onclick="doLogin(e)">Register</button>
+      </form>
+      <a href="register.html">Register</a>
+    </div>
+    <script>
+      function doLogin(e) {
+        // nst form = document.getElementById("register");
+        // form.addEventListener("submit", login);
+        console.log("clicked btn");
+      }
+    </script>
+  </body>
+</html>
