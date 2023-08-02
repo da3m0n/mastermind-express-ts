@@ -12,11 +12,11 @@ const UserSchema = new mongoose.Schema(
       required: [true, "Please provide email"],
       unique: [true, "Email already exists"],
     },
-    // password: {
-    //   type: String,
-    //   required: [true, "Please provide password"],
-    //   unique: false,
-    // },
+    password: {
+      type: String,
+      required: [true, "Please provide password"],
+      unique: false,
+    },
   },
   {
     collection: "users",

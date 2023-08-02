@@ -1,5 +1,6 @@
 // import { defineConfig, loadEnv } from "vite";
-import express from "express";
+import express, { Request, Response } from "express";
+import session from "express-session";
 import ViteExpress from "vite-express";
 import * as http from "http";
 import { WebSocket } from "ws";
@@ -13,6 +14,16 @@ const app = express();
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 const viewsDir = path.resolve(__dirname, "../views");
+const store = new session.MemoryStore();
+
+app.use(
+  session({
+    secret: config.server.sharedSecret,
+    saveUninitialized: false,
+    resave: false,
+    store,
+  })
+);
 
 // const PORT = 3000;
 import { User } from "../models/User";
@@ -26,15 +37,22 @@ mongoose
     w: "majority",
   })
   .then(() => {
-    console.log("Connected to MongoDB...");
+    console.log("Connected to MongoDB....");
   })
-  .catch((err) => {
+  .catch((err: any) => {
     console.error("error", err);
   });
 
 // app.use(express.json());
-app.use("/", express.static(path.resolve(__dirname, "../client")));
+// console.log("path", path.resolve(__dirname, "../client"));
+app.use("/mm", express.static(path.resolve(__dirname, "../client")));
+
 app.use(express.urlencoded({ extended: true }));
+// app.use(express.json());
+
+app.get("/", (req, res) => {
+  res.send("Welcome heer");
+});
 
 type callbackfunction = (p: any) => any;
 
@@ -67,37 +85,47 @@ wss.on("connection", (ws: WebSocket) => {
   });
 });
 // app.set("views", "./views");
-app.get("/login", (req_, res) => {
-  // res.send(
-  //   "Hello Vite + TypeScript!" +
-  //     " " +
-  //     __dirname +
-  //     " > " +
-  //     path.resolve(__dirname, "../views")
-  // );
-  // res.render("login.html");
+app.get("/mm/login", (req: Request, res: Response) => {
   res.sendFile(viewsDir + "/login.html");
 });
 
-app.get("/register", (req, res) => {
+app.post("/mm/login", async (req: Request, res: Response) => {
+  const { email, password } = req.body;
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    return res.redirect("/mm/login");
+  }
+  console.log(`session data - ` + JSON.stringify(req.session));
+
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) {
+    return res.redirect("/mm/login");
+  }
+
+  // res.json({ status: "ok", data: "" }); // cause Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
+  return res.redirect("/mm");
+});
+
+app.get("/mm/register", (req, res) => {
   res.sendFile(viewsDir + "/register.html");
 });
 
-app.post("/register", async (req, res) => {
-  console.log("in register", req.body);
-  // const { username, email, password: plainTextPassword } = req.body;
-  // const password = await bcrypt.hash(plainTextPassword, 10);
-  const { username, email } = req.body;
+app.post("/mm/register", async (req: Request, res: Response) => {
+  console.log("in register...", req.body);
+  const { username, email, password: plainTextPassword } = req.body;
+  const hashedPassword = await bcrypt.hash(plainTextPassword, 10);
+  // const { username, email } = req.body;
 
   try {
     const response = await User.create({
       username,
       email,
-      // password,
+      password: hashedPassword,
     });
     console.log("User created successfully...", response);
     // return res.json({ status: "ok" });
-    return res.redirect("/login");
+    return res.redirect("/mm/login");
   } catch (error: any) {
     if (error.code === 11000) {
       console.log("error", JSON.stringify(error));

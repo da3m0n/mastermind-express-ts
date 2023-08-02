@@ -21,6 +21,8 @@ const SERVER_PORT = process.env.SERVER_PORT
   ? Number(process.env.SERVER_PORT)
   : 1337;
 
+const SESSION_SHARED_SECRET = process.env.SESSION_SHARED_SECRET || "";
+
 export const config = {
   mongo: {
     user: MONGO_USER,
@@ -29,6 +31,7 @@ export const config = {
   },
   server: {
     port: SERVER_PORT,
+    sharedSecret: SESSION_SHARED_SECRET,
   },
 };
 

@@ -60,12 +60,7 @@
   <body>
     <div id="centerDiv">
       <h1>User Registration</h1>
-      <form
-        id="userForm"
-        method="post"
-        action="/register"
-        onclick="registerUser(e)"
-      >
+      <form id="userForm" method="post" action="/register">
         <div class="input-group">
           <label for="userName">Username:</label>
           <input
@@ -89,6 +84,18 @@
             required
             oninput="clearWarningMessage()"
             onchange="toggleHighlightRed('email')"
+          />
+        </div>
+        <div class="form-row">
+          <label class="icon" for="password">
+            <i class="fa-solid fa-unlock"></i>
+          </label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Password"
+            required
           />
         </div>
         <div class="button-container">
