@@ -1,59 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
+    <link rel="stylesheet" href="src/css/style.css" />
+
     <title>User Registration and Login</title>
     <style>
       body {
         font-family: Arial, sans-serif;
-      }
-      #centerDiv {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        margin-top: 50px;
-        padding: 10px;
-        border: 2px solid #ccc;
-        border-radius: 10px;
-        max-width: 300px; /* Limit the width of the form container */
-        margin: 0 auto; /* Center the form horizontally */
-      }
-      #userForm {
-        display: flex;
-        flex-direction: column;
-      }
-      .input-group {
-        display: flex;
-        align-items: center; /* Align items vertically within each .input-group */
-        width: 100%;
-      }
-      .input-group label {
-        margin-right: 10px;
-        flex-basis: 100px; /* Set a specific width for the labels */
-      }
-      input[type="text"],
-      input[type="email"],
-      input[type="submit"] {
-        margin: 5px;
-        padding: 5px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        flex: 1; /* Allow the input fields to expand and take up the remaining space */
-      }
-      .button-container {
-        display: flex;
-        justify-content: space-between; /* Align buttons horizontally with space in between */
-        margin-top: 10px; /* Add some spacing between the input fields and buttons */
-      }
-      input[type="submit"] {
-        width: 48%; /* Set a width for the buttons */
-      }
-      .warning {
-        color: red;
-        margin-top: 5px;
-      }
-      .highlight-red {
-        border: 1px solid red;
       }
     </style>
   </head>
@@ -62,144 +15,30 @@
       <h1>User Registration</h1>
       <form id="userForm" method="post" action="/register">
         <div class="input-group">
-          <label for="userName">Username:</label>
+          <label for="username">Username</label>
           <input
             type="text"
             id="username"
             name="username"
-            placeholder="Enter your username"
             required
             autocomplete="off"
-            oninput="clearWarningMessage()"
-            onchange="toggleHighlightRed('username')"
           />
         </div>
         <div class="input-group">
-          <label for="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            placeholder="Enter your email"
-            required
-            oninput="clearWarningMessage()"
-            onchange="toggleHighlightRed('email')"
-          />
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required />
         </div>
-        <div class="form-row">
-          <label class="icon" for="password">
-            <i class="fa-solid fa-unlock"></i>
-          </label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            placeholder="Password"
-            required
-          />
+        <div class="input-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required />
         </div>
+
         <div class="button-container">
           <input type="submit" value="Register" />
-          <input type="submit" value="Login" />
+          <a href="/login">Login</a>
         </div>
         <div class="warning" id="warningMessage"></div>
       </form>
     </div>
-
-    <script>
-      async function registerUser(event) {
-        event.preventDefault(); // Prevent form submission
-        var form = document.getElementById("userForm");
-        var username = form.username.value;
-        var email = form.email.value;
-        var warningMessage = document.getElementById("warningMessage");
-        console.log("XXXXXXXXXXXX");
-        if (username.trim() === "" || email.trim() === "") {
-          warningMessage.textContent =
-            "Please fill in both username and email to register.";
-          // toggleHighlightRed("username");
-          // toggleHighlightRed("email");
-        } else {
-          console.log(
-            "Registration successful for: " + username + " (" + email + ")"
-          );
-          warningMessage.textContent = "";
-          // toggleHighlightRed("username");
-          // toggleHighlightRed("email");
-
-          console.log(username, +" -> " + email);
-
-          const res = await fetch("/register", {
-            method: "post",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              username: username,
-              email: email,
-            }),
-          }).then((res) => res.json());
-
-          if (res.status === "ok") {
-            console.log("ok");
-          } else {
-            console.log(res.error);
-          }
-        }
-      }
-
-      function loginUser(event) {
-        event.preventDefault(); // Prevent form submission
-        var form = document.getElementById("userForm");
-        var userName = form.username.value;
-        var warningMessage = document.getElementById("warningMessage");
-
-        if (userName.trim() === "") {
-          warningMessage.textContent = "Please enter your username to login.";
-          toggleHighlightRed("username");
-        } else {
-          console.log("Login successful for: " + userName);
-          warningMessage.textContent = ""; // Clear the warning message
-          toggleHighlightRed("username");
-        }
-      }
-
-      function clearWarningMessage() {
-        var warningMessage = document.getElementById("warningMessage");
-        warningMessage.textContent = ""; // Clear the warning message
-        toggleHighlightRed("username");
-        toggleHighlightRed("email");
-      }
-
-      function toggleHighlightRed(elementId) {
-        var inputElement = document.getElementById(elementId);
-        if (
-          inputElement.value.trim() === "" &&
-          !inputElement.classList.contains("highlight-red")
-        ) {
-          inputElement.classList.add("highlight-red");
-        } else if (inputElement.value.trim() !== "") {
-          inputElement.classList.remove("highlight-red");
-        }
-      }
-
-      function validateForm() {
-        var form = document.getElementById("userForm");
-        var userName = form.username;
-        var userEmail = form.email;
-        var warningMessage = document.getElementById("warningMessage");
-
-        if (userName.checkValidity() && userEmail.checkValidity()) {
-          warningMessage.textContent = "";
-          return true;
-        } else {
-          warningMessage.textContent =
-            "Please fill in both username and email to proceed.";
-          toggleHighlightRed("username");
-          toggleHighlightRed("email");
-          return false;
-        }
-      }
-    </script>
   </body>
 </html>

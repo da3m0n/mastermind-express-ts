@@ -1,5 +1,5 @@
 // import { defineConfig, loadEnv } from "vite";
-import express, { Request, Response } from "express";
+import express, { Request, Response, NextFunction } from "express";
 import session from "express-session";
 import ViteExpress from "vite-express";
 import * as http from "http";
@@ -8,7 +8,7 @@ import path from "path";
 import ServerGame from "./ServerGame";
 import * as mongoose from "mongoose";
 import { config } from "../config/config";
-import bcrypt, { hash } from "bcrypt";
+import bcrypt from "bcrypt";
 
 const app = express();
 const server = http.createServer(app);
@@ -27,9 +27,6 @@ app.use(
 
 // const PORT = 3000;
 import { User } from "../models/User";
-import bodyParser from "body-parser";
-
-let game = undefined;
 
 mongoose
   .connect(config.mongo.url, {
@@ -43,14 +40,38 @@ mongoose
     console.error("error", err);
   });
 
+// app.get("", async (req: Request, res: Response) => {
+//   try {
+//     const token = req.headers.authorization;
+//     return req.next();
+//   } catch (e) {
+//     return req.next();
+//   }
+// });
+
+declare module "express-session" {
+  export interface SessionData {
+    userId: { [key: string]: any };
+  }
+}
+
+const isAuth = (req: Request, res: Response, next: NextFunction) => {
+  console.log("XXXXXXXXXX", req.session.userId);
+  if (req.session.userId) {
+    next();
+  } else {
+    res.redirect("/login");
+  }
+};
+
 // app.use(express.json());
 // console.log("path", path.resolve(__dirname, "../client"));
-app.use("/mm", express.static(path.resolve(__dirname, "../client")));
+app.use("/mm", isAuth, express.static(path.resolve(__dirname, "../client")));
 
 app.use(express.urlencoded({ extended: true }));
 // app.use(express.json());
 
-app.get("/", (req, res) => {
+app.get("/", (req: Request, res: Response) => {
   res.send("Welcome heer");
 });
 
@@ -85,38 +106,44 @@ wss.on("connection", (ws: WebSocket) => {
   });
 });
 // app.set("views", "./views");
-app.get("/mm/login", (req: Request, res: Response) => {
+app.get("/login", (req: Request, res: Response) => {
   res.sendFile(viewsDir + "/login.html");
 });
 
-app.post("/mm/login", async (req: Request, res: Response) => {
+app.post("/login", async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
   const user = await User.findOne({ email });
   if (!user) {
-    return res.redirect("/mm/login");
+    return res.redirect("/login");
   }
   console.log(`session data - ` + JSON.stringify(req.session));
 
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
-    return res.redirect("/mm/login");
+    return res.redirect("/login");
   }
+
+  req.session.userId = user.id;
 
   // res.json({ status: "ok", data: "" }); // cause Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
   return res.redirect("/mm");
 });
 
-app.get("/mm/register", (req, res) => {
+app.get("/register", (req: Request, res: Response) => {
   res.sendFile(viewsDir + "/register.html");
 });
 
-app.post("/mm/register", async (req: Request, res: Response) => {
+app.post("/register", async (req: Request, res: Response) => {
   console.log("in register...", req.body);
   const { username, email, password: plainTextPassword } = req.body;
   const hashedPassword = await bcrypt.hash(plainTextPassword, 10);
   // const { username, email } = req.body;
 
+  const user = await User.findOne({ email });
+  if (user) {
+    // return res.redirect("/register");
+  }
   try {
     const response = await User.create({
       username,
@@ -125,14 +152,12 @@ app.post("/mm/register", async (req: Request, res: Response) => {
     });
     console.log("User created successfully...", response);
     // return res.json({ status: "ok" });
-    return res.redirect("/mm/login");
+    return res.redirect("/login");
   } catch (error: any) {
+    console.log("error", JSON.stringify(error));
     if (error.code === 11000) {
-      console.log("error", JSON.stringify(error));
       return res.json({ status: "error", error: "Username already in use." });
     }
-    console.log("error", JSON.stringify(error));
-
     return res.json({ status: "error" });
   }
   //**********************************

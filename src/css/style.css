@@ -17,14 +17,15 @@ body {
   margin: 0;
   display: flex;
   place-items: center;
+  font-family: Arial, sans-serif;
   /*min-width: 320px;*/
   /*min-height: 100vh;*/
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
+/*h1 {*/
+/*  font-size: 3.2em;*/
+/*  line-height: 1.1;*/
+/*}*/
 
 #app {
   max-width: 1280px;
@@ -201,8 +202,61 @@ h1 {
         text-align: center;
       }
 }
+/* Login and register styles*/
+#centerDiv {
+  background: #eeeeee;
+  display: flex;
+  color: #000000;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  max-width: 300px; /* Limit the width of the form container */
+  margin: 50px auto 0 auto;
+}
+#userForm {
+  display: flex;
+  flex-direction: column;
+}
+.input-group {
+  display: flex;
+  align-items: center; /* Align items vertically within each .input-group */
+  width: 100%;
+}
+.input-group label {
+  margin-right: 10px;
+  flex-basis: 100px; /* Set a specific width for the labels */
+}
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="submit"] {
+  margin: 5px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  flex: 1; /* Allow the input fields to expand and take up the remaining space */
+}
+.button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* Align buttons horizontally with space in between */
+  margin-top: 10px; /* Add some spacing between the input fields and buttons */
+}
+input[type="submit"] {
+  width: 48%; /* Set a width for the buttons */
+}
+.warning {
+  color: red;
+  margin-top: 5px;
+}
+.highlight-red {
+  border: 1px solid red;
+}
 /**/
-
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
