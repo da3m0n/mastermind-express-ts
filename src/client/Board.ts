@@ -19,7 +19,7 @@ export default class Board {
   private curRow_: number;
   private curCol_: number;
   private guesses_ = new Set();
-  private codePegsRow_: any[] =[];
+  private codePegsRow_: any[] = [];
   private rowsDiv_: any[] = [];
   private game_: ClientGame;
 
@@ -49,7 +49,7 @@ export default class Board {
   private handleKeyboardInput() {
     return async (e: KeyboardEvent) => {
       const num = parseInt(e.key);
-      console.log('xxxxxxxxxxxx', e);
+      console.log("xxxxxxxxxxxx", e);
       if (num >= 1 && num <= 7 && !this.guesses_.has(num)) {
         this.guesses_.add(num);
         const codePegRow = this.codePegsRow_[this.curRow_];
@@ -88,8 +88,21 @@ export default class Board {
     };
   }
 
-  createBoard(rootDiv: HTMLElement) {
+  async createBoard(rootDiv: HTMLElement) {
     this.rootDiv_ = rootDiv;
+    const cd = Utils.createDom;
+
+    const logoutDiv = document.getElementById("logout-cont") as HTMLDivElement;
+    const player = document.getElementById("player") as HTMLDivElement;
+    const playerLabel = document.createTextNode("Playing as ");
+
+    const res = await fetch("/api/username");
+    const data = await res.text();
+
+    player.innerHTML = data;
+    logoutDiv.appendChild(player);
+    // logoutDiv.parentElement.appendChild(logoutDiv);
+
     this.recreateBoard();
   }
 
@@ -174,10 +187,10 @@ export default class Board {
     ) as HTMLButtonElement;
 
     newGameBtn.addEventListener("click", async () => {
-      console.log('guesses', this.guesses_);
+      console.log("guesses", this.guesses_);
       this.recreateBoard();
-      // document.addEventListener("keypress", this.handleKeyboardInput());      
-      await this.game_.newGame()
+      // document.addEventListener("keypress", this.handleKeyboardInput());
+      await this.game_.newGame();
     });
 
     for (let i = 0; i < this.cols_; i++) {

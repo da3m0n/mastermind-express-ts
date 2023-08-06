@@ -22,9 +22,29 @@ body {
   /*min-height: 100vh;*/
 }
 
-.logout a{
-  color: #ffffff
+#logout-cont {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 5px;
+
+  & a {
+      text-decoration: none;
+      border-bottom: 1px solid #ffffff;
+    }
+  & a:hover {
+      color: green;
+      border-bottom: 1px solid #1c87c9;
+  }
+
+  & .user-name {
+      color: #747bff;
+      padding-left: 20px;
+    }
+
+
 }
+
 /*h1 {*/
 /*  font-size: 3.2em;*/
 /*  line-height: 1.1;*/
