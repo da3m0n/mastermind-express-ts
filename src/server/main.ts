@@ -9,6 +9,7 @@ import ServerGame from "./ServerGame";
 import * as mongoose from "mongoose";
 import { config } from "../config/config";
 import bcrypt from "bcrypt";
+import MongoStore from "connect-mongo";
 
 const app = express();
 const server = http.createServer(app);
@@ -16,19 +17,10 @@ const wss = new WebSocket.Server({ server });
 const viewsDir = path.resolve(__dirname, "../views");
 const store = new session.MemoryStore();
 
-app.use(
-  session({
-    secret: config.server.sharedSecret,
-    saveUninitialized: false,
-    resave: false,
-    store,
-  })
-);
-
 // const PORT = 3000;
 import { User } from "../models/User";
 
-mongoose
+const connection = mongoose
   .connect(config.mongo.url, {
     retryWrites: true,
     w: "majority",
@@ -39,6 +31,32 @@ mongoose
   .catch((err: any) => {
     console.error("error", err);
   });
+
+// const dbOptions = {
+//   retryWrites: true,
+//   w: "majority",
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true,
+// };
+// const conn2 = mongoose.createConnection(config.mongo.url, dbOptions);
+//
+// const sessionStore = new MongoStore({
+//   mongooseConnection: conn2,
+//   collection: "sessions",
+// });
+
+app.use(
+  session({
+    secret: config.server.sharedSecret,
+    saveUninitialized: false,
+    resave: false,
+    cookie: { maxAge: 1000 * 60 * 60 * 24 },
+    store: new MongoStore({
+      mongoUrl: config.mongo.url,
+      collectionName: "sessions",
+    }),
+  })
+);
 
 // app.get("", async (req: Request, res: Response) => {
 //   try {
@@ -56,7 +74,6 @@ declare module "express-session" {
 }
 
 const isAuth = (req: Request, res: Response, next: NextFunction) => {
-  console.log("XXXXXXXXXX", req.session.userId);
   if (req.session.userId) {
     next();
   } else {
@@ -69,7 +86,7 @@ const isAuth = (req: Request, res: Response, next: NextFunction) => {
 app.use("/mm", isAuth, express.static(path.resolve(__dirname, "../client")));
 
 app.use(express.urlencoded({ extended: true }));
-// app.use(express.json());
+app.use(express.json());
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Welcome heer");
@@ -130,6 +147,16 @@ app.post("/login", async (req: Request, res: Response) => {
   return res.redirect("/mm");
 });
 
+app.get("/logout", (req: Request, res: Response) => {
+  req.session.destroy((err) => {
+    if (err) {
+      res.status(400).send();
+    } else {
+      res.redirect("/login");
+    }
+  });
+});
+
 app.get("/register", (req: Request, res: Response) => {
   res.sendFile(viewsDir + "/register.html");
 });
@@ -142,7 +169,8 @@ app.post("/register", async (req: Request, res: Response) => {
 
   const user = await User.findOne({ email });
   if (user) {
-    // return res.redirect("/register");
+    // console.log(`${user} exists`);
+    return res.redirect("/register");
   }
   try {
     const response = await User.create({
@@ -150,8 +178,7 @@ app.post("/register", async (req: Request, res: Response) => {
       email,
       password: hashedPassword,
     });
-    console.log("User created successfully...", response);
-    // return res.json({ status: "ok" });
+    // res.json({ status: "ok" });
     return res.redirect("/login");
   } catch (error: any) {
     console.log("error", JSON.stringify(error));
