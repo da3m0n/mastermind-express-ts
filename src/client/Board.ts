@@ -116,6 +116,14 @@ export default class Board {
     this.curRow_ = 0;
     Utils.removeChildren(rootDiv);
 
+    const logoutDiv = document.getElementById("logout");
+    const temp = cd("div", { class: "temp" }) as HTMLDivElement;
+
+    const res = fetch("http://localhost:27017/mastermind");
+    temp.innerHTML = "temp";
+    logoutDiv.appendChild(temp);
+    rootDiv.parentElement.appendChild(logoutDiv);
+
     const boardDiv = cd("div", { class: "board" }) as HTMLDivElement;
     const playGrid = cd("div", { class: "play-grid" }) as HTMLDivElement;
     const codePegsDiv = cd("div", { class: "code-pegs" }) as HTMLDivElement;
