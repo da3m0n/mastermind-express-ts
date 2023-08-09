@@ -92,6 +92,8 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Welcome heer");
 });
 
+ViteExpress.bind(app, server);
+
 type callbackfunction = (p: any) => any;
 
 wss.on("connection", (ws: WebSocket) => {
@@ -131,20 +133,27 @@ app.post("/login", async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
   const user = await User.findOne({ email });
+
   if (!user) {
-    return res.redirect("/login");
+    res.send(JSON.stringify({ status: false, message: "Failed to login" }));
+    return;
+    // return res.redirect("/login");
   }
-  console.log(`session data - ` + JSON.stringify(req.session));
 
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
-    return res.redirect("/login");
+    res.send(JSON.stringify({ status: false, message: "Failed to login" }));
+    return;
+    // return res.redirect("/login");
   }
 
+  console.log(`session data - ` + JSON.stringify(req.session));
   req.session.userId = user.id;
 
   // res.json({ status: "ok", data: "" }); // cause Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
-  return res.redirect("/mm");
+  // return res.redirect("/mm");
+  res.send(JSON.stringify({ status: true }));
+  return;
 });
 
 app.get("/logout", (req: Request, res: Response) => {
@@ -187,34 +196,6 @@ app.post("/register", async (req: Request, res: Response) => {
     }
     return res.json({ status: "error" });
   }
-  //**********************************
-  // bcrypt.hash(password, 10).then((hashedPassword: string) => {
-  //   const user = new User({
-  //     username: req.body.username,
-  //     password: hashedPassword,
-  //   });
-  //
-  //   user
-  //     .save()
-  //     .then((result) => {
-  //       res.status(201).send({
-  //         message: "User created successfully",
-  //         result,
-  //       });
-  //     })
-  //     .catch((err) => {
-  //       res.status(500).send({
-  //         message: "Error creating user",
-  //         err,
-  //       });
-  //     })
-  //     .catch((e) => {
-  //       res.status(500).send({
-  //         message: "Password was not hashed correctly",
-  //         e,
-  //       });
-  //     });
-  // });
 });
 
 app.get("/api/username", async (req: Request, res: Response) => {
@@ -226,6 +207,9 @@ server.listen(config.server.port, () => {
   console.log(`Server iss listening on ${config.server.port}...`);
 });
 
+app.get("/mm/admin", async (req: Request, res: Response) => {
+  res.send("admin");
+});
 // const start = async () => {
 //   try {
 //     await mongoose.connect(
@@ -239,8 +223,5 @@ server.listen(config.server.port, () => {
 //     process.exit(1);
 //   }
 // };
-ViteExpress.bind(app, server);
+
 // start();
-// ViteExpress.listen(app, PORT, () =>
-//   console.log("Server iss listening on port 3000...")
-// );

@@ -3,12 +3,11 @@
   <head>
     <link rel="stylesheet" href="src/css/style.css" />
     <title>User Login</title>
-    <style></style>
   </head>
-  <body>
+  <body onload="loaded()">
     <div id="centerDiv">
       <h1>User Login</h1>
-      <form id="userForm" method="post" action="/login">
+      <form id="userForm" method="post" 1action="/login">
         <div class="input-group">
           <label for="email">Email:</label>
           <input type="email" id="email" name="email" required />
@@ -32,5 +31,33 @@
         <div class="warning" id="warningMessage"></div>
       </form>
     </div>
+    <script>
+      async function doLogin(e) {
+        e.preventDefault();
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        const res = await fetch("/login", {
+          method: "POST",
+          cache: "no-cache",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password }),
+        });
+
+        const status = await res.json();
+        console.log("status", status);
+        if (status.status) {
+          location.assign("/mm");
+        } else {
+          document.getElementById("warningMessage").innerText = status.message;
+        }
+        // return res.json();
+      }
+
+      function loaded() {
+        document.getElementById("userForm").addEventListener("submit", doLogin);
+      }
+    </script>
   </body>
 </html>

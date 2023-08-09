@@ -24,7 +24,7 @@ body {
 
 #logout-cont {
   display: flex;
-  flex-direction: row;
+  flex-direction: row-reverse;
   justify-content: space-between;
   margin-bottom: 5px;
 

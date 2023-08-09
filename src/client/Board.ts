@@ -97,9 +97,9 @@ export default class Board {
     const playerLabel = document.createTextNode("Playing as ");
 
     const res = await fetch("/api/username");
-    const data = await res.text();
+    const userName = await res.text();
 
-    player.innerHTML = data;
+    player.innerHTML = `Playing as ${userName}`;
     logoutDiv.appendChild(player);
     // logoutDiv.parentElement.appendChild(logoutDiv);
 
@@ -116,13 +116,13 @@ export default class Board {
     this.curRow_ = 0;
     Utils.removeChildren(rootDiv);
 
-    const logoutDiv = document.getElementById("logout");
-    const temp = cd("div", { class: "temp" }) as HTMLDivElement;
+    // const logoutDiv = document.getElementById("logout");
+    // const temp = cd("div", { class: "temp" }) as HTMLDivElement;
 
-    const res = fetch("http://localhost:27017/mastermind");
-    temp.innerHTML = "temp";
-    logoutDiv.appendChild(temp);
-    rootDiv.parentElement.appendChild(logoutDiv);
+    // const res = fetch("http://localhost:27017/mastermind");
+    // temp.innerHTML = "temp";
+    // logoutDiv.appendChild(temp);
+    // rootDiv.parentElement.appendChild(logoutDiv);
 
     const boardDiv = cd("div", { class: "board" }) as HTMLDivElement;
     const playGrid = cd("div", { class: "play-grid" }) as HTMLDivElement;
